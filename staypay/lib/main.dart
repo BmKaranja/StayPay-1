@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login.dart';
 void main(){
   runApp(StayPay());
 }
@@ -9,9 +10,10 @@ class StayPay extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
       initialRoute: '/',
       routes: {
-        
+        '/':(context) => Login() ,
       },
     );
   }
