@@ -1,106 +1,122 @@
 import 'package:flutter/material.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   // Tenant controllers
-  final TextEditingController _tenantHouseNumberController = TextEditingController();
-  final TextEditingController _tenantPasswordController = TextEditingController();
+  final TextEditingController tenantHouseController = TextEditingController();
+  final TextEditingController tenantPasswordController = TextEditingController();
 
   // Landlord controllers
-  final TextEditingController _landlordEmailController = TextEditingController();
-  final TextEditingController _landlordPasswordController = TextEditingController();
+  final TextEditingController landlordEmailController = TextEditingController();
+  final TextEditingController landlordPasswordController = TextEditingController();
+
+  // SignUp controllers (inside landlord tab)
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController signupEmailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController signupPasswordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this); // Tenant & Landlord tabs
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF090C11),
+      backgroundColor: Color(0xFF090c11),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF090C11),
+        backgroundColor: Color(0xFF090c11),
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: const Color(0xFF00FF00),
+          indicatorColor: Color(0xFF00ff00),
           tabs: const [
-            Tab(text: "Tenant Login"),
-            Tab(text: "Landlord Login"),
+            Tab(text: "Tenant"),
+            Tab(text: "Landlord"),
           ],
         ),
-        title: const Text("StayPay Rent Management"),
+        title: const Text("StayPay RENT MANAGEMENT"),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
           _buildTenantLogin(),
-          _buildLandlordLogin(),
+          _buildLandlordAuth(),
         ],
       ),
     );
   }
 
   Widget _buildTenantLogin() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          _buildTextField("House Number", _tenantHouseNumberController),
+          Image.asset("assets/logo.png", height: 80),
           const SizedBox(height: 20),
-          _buildTextField("Password", _tenantPasswordController, obscure: true),
-          const SizedBox(height: 30),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00FF00),
-              ),
-              onPressed: () {
-              },
-              child: const Text("Login", style: TextStyle(color: Colors.white)),
-            ),
+          _buildTextField("House Number", tenantHouseController),
+          const SizedBox(height: 20),
+          _buildTextField("Password", tenantPasswordController, obscure: true),
+          TextButton(
+            onPressed: () => Navigator.pushNamed(context, "/tenantReset"),
+            child: const Text("Forgot Password?", style: TextStyle(color: Color(0xFF00ff00))),
           ),
-          const SizedBox(height: 15),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {
-                // ignore: avoid_print
-                print("Tenant SignUp: ${_tenantHouseNumberController.text}");
-              },
-              child: const Text("Sign Up", style: TextStyle(color: Colors.white)),
-            ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            onPressed: () => Navigator.pushNamed(context, "/tenantPayment"),
+            child: const Text("Login", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLandlordLogin() {
-    return Padding(
+  Widget _buildLandlordAuth() {
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          _buildTextField("Email", _landlordEmailController),
+          Image.asset("assets/logo.png", height: 80),
           const SizedBox(height: 20),
-          _buildTextField("Password", _landlordPasswordController, obscure: true),
+          _buildTextField("Email", landlordEmailController),
+          const SizedBox(height: 20),
+          _buildTextField("Password", landlordPasswordController, obscure: true),
+          TextButton(
+            onPressed: () => Navigator.pushNamed(context, "/landlordReset"),
+            child: const Text("Forgot Password?", style: TextStyle(color: Colors.white)),
+          ),
           const SizedBox(height: 30),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            onPressed: () {
-            },
+            onPressed: () => Navigator.pushNamed(context, "/dashboard"),
             child: const Text("Login", style: TextStyle(color: Colors.white)),
+          ),
+          const SizedBox(height: 15),
+
+          _buildTextField("Full Name", fullNameController),
+          const SizedBox(height: 15),
+          _buildTextField("Email", signupEmailController),
+          const SizedBox(height: 15),
+          _buildTextField("Phone Number", phoneController),
+          const SizedBox(height: 15),
+          _buildTextField("Password", signupPasswordController, obscure: true),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+            onPressed: () {
+              Navigator.pushNamed(context, "/propertySetup");
+            },
+            child: const Text("Sign Up", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -111,35 +127,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     return TextField(
       controller: controller,
       obscureText: obscure,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        border: const OutlineInputBorder(),
+        labelStyle: const TextStyle(color: Colors.white),
+        border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.green)),
       ),
     );
   }
 }
-/*Widget type mismatch  
-You declared Login as a StatelessWidget but then tried to use createState(). Only StatefulWidget should have createState.
-
-dart
-class Login extends StatefulWidget { // ✅ should be StatefulWidget
-  const Login({super.key});
-
-  @override
-  State<Login> createState() => _LoginState();
-}
-Typos in method names
-
-_buildTenatLogin → should be _buildTenantLogin.
-
-padding → should be Padding (capital P).
-
-Style: → should be style: (lowercase).
-
-ElevatedButton.StyleFrom → should be ElevatedButton.styleFrom.
-
-Controller names mismatch  
-You declared _tenantHousenumbercontroller but used tenantHouseController. They must match.
-
-Return type of helper methods  
-_buildTenantLogin() should return a Widget, not widget.*/

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'splash.dart';
 import 'login.dart';
+
 void main(){
   runApp(StayPay());
 }
@@ -11,9 +13,10 @@ class StayPay extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      initialRoute: '/',
+      initialRoute: "/splash",
       routes: {
-        '/':(context) => Login() ,
+        '/splash':(context) => const SplashScreen(),
+        '/login':(context) => const LoginScreen(),
       },
     );
   }
